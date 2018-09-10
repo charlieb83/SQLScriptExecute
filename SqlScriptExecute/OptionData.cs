@@ -432,7 +432,7 @@ namespace SQLScriptExecute
 
             try
             {
-                FileAttributes attr = File.GetAttributes(OptionData.Instance.ScriptsToExecutePath.Trim());
+                FileAttributes attr = File.GetAttributes(this.ScriptsToExecutePath.Trim());
                 if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
                 {
                     //MessageBox.Show("Its a directory");

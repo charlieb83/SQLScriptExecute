@@ -129,12 +129,10 @@ namespace SQLScriptExecute
                     {
                         connection.Open();                        
                         return "";              //Successful
-                        //MessageBox.Show("Connection Successful!", "Message", MessageBoxButtons.OK, MessageBoxIcon.None);
                     }
                     catch (SqlException ex)
                     {
                         return ex.Message;      //Failed
-                        //MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
