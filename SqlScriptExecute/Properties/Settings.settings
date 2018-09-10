@@ -41,5 +41,8 @@
     <Setting Name="MasterConnectionString" Type="System.String" Scope="User">
       <Value Profile="(Default)">Server=Server; Database=master; Trusted_Connection=True;</Value>
     </Setting>
+    <Setting Name="ProcessErrorFiles" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

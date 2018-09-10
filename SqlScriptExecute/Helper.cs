@@ -55,11 +55,13 @@ namespace SQLScriptExecute
         public string ValidateValues(bool runtime)
         {
             string s = "";
+            //Missing Server
             if (string.IsNullOrWhiteSpace(od.SelectedServer))
             {
                 s += "Missing Server Name" + System.Environment.NewLine;
             }
 
+            //Missing UserName or Password
             if (od.WindowsAuthentication == false)
             {
                 if (string.IsNullOrWhiteSpace(od.UserName) || string.IsNullOrWhiteSpace(od.Password))
@@ -71,14 +73,37 @@ namespace SQLScriptExecute
             //Only test at runtime
             if (runtime == true)
             {
+                if (od.ProcessErrorFiles==true)
+                {
+                    //Invalid Error file.
+                    IEnumerable<string> validItems = Enumerable.Empty<string>();
+                    string t = "";
+                    try
+                    {
+                        var tempList = File.ReadAllLines(od.ScriptsToExecutePath);
+                        t = tempList.First();
+
+                        if (t.Substring(0, 20) != "HEADER----StartTime:")
+                        {
+                            s += "Invalid Error File - Header is Invalid." + System.Environment.NewLine;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        s += "Invalid Error File" + System.Environment.NewLine;
+                    }
+                }
+                
+                //Missing Script Path
                 if (string.IsNullOrWhiteSpace(od.ScriptsToExecutePath))
                 {
                     s += "Missing Scripts To Execute Path" + System.Environment.NewLine;
                 }
 
+                //Missing Log Path
                 if (string.IsNullOrWhiteSpace(od.LogPath))
                 {
-                    s += "Missing Scripts To Log Path" + System.Environment.NewLine;
+                    s += "Missing Log Path" + System.Environment.NewLine;
                 }
             }
                         
@@ -159,11 +184,11 @@ namespace SQLScriptExecute
             this.AppendTextBoxStatusWithTimeStamp("Checking Path For SQL Script File Count.....");
             if (od.FileTotalCount == 0)
             {
-                this.AppendTextBoxStatus("Failed\r\n");
+                this.AppendTextBoxStatus("Failed\r\n" + "There are 0 sql scripts found\r\n");
                 return;
             }
             this.AppendTextBoxStatus("Passed\r\n");
-            
+
             //Check background worker
             if (backgroundWorker1.IsBusy != true)
             {
@@ -176,8 +201,8 @@ namespace SQLScriptExecute
                 this.AppendTextBoxStatusWithTimeStamp("ERROR: Could Not Start Worker Thread.....\r\n");
                 return;
             }
-
-            od.ErrorFileNames.Clear();
+            //All good...
+            od.ErrorListFileNames.Clear();
             od.CancelButtonEnabled = true;
             od.RunButtonEnabled = false;            
         }
@@ -200,11 +225,13 @@ namespace SQLScriptExecute
         -----------------------------------------------------*/
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
+            DateTime startTime = DateTime.Now;
+            od.WorkerIsBusy = true;
+
             string fileFilter = "*.sql";
             string sqlScriptFile;
             string scriptsPath = "";
             string serverConnection = "";
-            //int totalScriptCount = 0;
             int scriptsUpdated = 0;
             int errorCount = 0;
             int currentCount = 0;
@@ -212,33 +239,23 @@ namespace SQLScriptExecute
             string exceptionMessage = "";
             string status = "";
 
-            od.WorkerIsBusy = true;
-
-            DateTime startTime = DateTime.Now;   //.ToString("yyyyMMddHHmmss");
-
+            //LogFile - Append timestamp to FileName
+            od.LogFileName += "_" + startTime.ToString("yyyyMMddHHmmss"); 
             StringBuilder errorMessages = new StringBuilder();
 
+            //Search Option
             SearchOption option = od.IncludeSubFolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-
-            //this.Invoke((MethodInvoker)delegate ()
-            //{
-            //    serverConnection = comboBoxServer.Text.Trim();      //TODO: Set in Options Class - CurrentServer
-            //    scriptsPath = textBoxScriptPath.Text.Trim();
-            //});
 
             //Set vals from data class
             serverConnection = od.SelectedServer;
             scriptsPath = od.ScriptsToExecutePath;
             string sqlConnectionString = od.ConnectionString;                    
 
-            // Get number of files
-            //totalScriptCount = Directory.GetFiles(scriptsPath, fileFilter, option).Length;
-            //od.FileTotalCount = totalScriptCount;
-
             //TODO: add max progress to class (currently hardcoded to 100)
             int step = 100 / od.FileTotalCount;
             //int step = circularProgressBar1.Maximum / totalScriptCount;
-
+            
+            //LogFile StreamWriter
             using (StreamWriter w = File.CreateText(od.LogPath + @"\" + od.LogFileName + @".log"))
             {
                 //Log Header
@@ -249,8 +266,23 @@ namespace SQLScriptExecute
                     Server server = new Server(new ServerConnection(connection));
                     //SqlTransaction sqlTransaction = connection.BeginTransaction();  //Use Transactions...future maybe?
 
+                    //Determine if processing error file or enumerating folders for .sql files
+                    IEnumerable<string> validItems = Enumerable.Empty<string>();
+                    if (od.ProcessErrorFiles == true)
+                    {
+                        //When processing error file get list of files from within the file
+                        var tempList = File.ReadAllLines(od.ScriptsToExecutePath);
+                        validItems = new List<string>(tempList).Skip(1); //Skip Header Record
+                    }
+                    else
+                    {
+                        //Enumerate directory
+                        validItems = Directory.EnumerateFiles(scriptsPath, fileFilter, option).OrderBy(f => f);
+                    }
+
                     //Loop through folders and files order by name
-                    foreach (string file in Directory.EnumerateFiles(scriptsPath, fileFilter, option).OrderBy(f => f))
+                    //foreach (string file in Directory.EnumerateFiles(scriptsPath, fileFilter, option).OrderBy(f => f))
+                    foreach (string file in validItems)
                     {
                         currentCount++;
                         sqlScriptFile = File.ReadAllText(file);
@@ -291,7 +323,7 @@ namespace SQLScriptExecute
                             //Log Error
                             Log(file + "-- Error: " + exceptionMessage, w, true);
                             //Add Error FileName to ErrorList
-                            od.ErrorFileNames.Add(file);
+                            od.ErrorListFileNames.Add(file);
                         }
 
                         //Compile values into an Array (ProgressStepValue, ScriptsUpdated, ErrorCount)
@@ -363,7 +395,8 @@ namespace SQLScriptExecute
                     //Create Excel LOG
                     CreateExcelLog();
                 }
-                WriteErrorFile();
+                //This is a file of just the error scripts.  Use incase you want to just execute these in a 2nd run
+                WriteErrorFile(startTime, od.FileTotalCount, errorCount);
             }
         }
 
@@ -511,14 +544,14 @@ namespace SQLScriptExecute
         /*-----------------------------------------------------
         Error File Header
         -----------------------------------------------------*/
-        //TODO: Change class property name ErrorFileNames....it's too similar to ErrorFileName
-        //TODO: Write header text to file
-        //TODO: Add functionality to take this file as input and just run these errors
-        private void WriteErrorFile()
+        private void WriteErrorFile(DateTime startTime, int totalFiles,  int errorCount)
         {
             using (TextWriter tw = new StreamWriter(od.ErrorFileName))
             {
-                foreach (String s in od.ErrorFileNames)
+                //Write Header to error file
+                tw.WriteLine("HEADER----StartTime:" + startTime.ToString("yyyyMMddHHmmss") + ", TotalFilesDuringThisRun: " + totalFiles.ToString() + ", ErrorCount: " + errorCount.ToString());
+
+                foreach (String s in od.ErrorListFileNames)
                     tw.WriteLine(s);
             }
         }

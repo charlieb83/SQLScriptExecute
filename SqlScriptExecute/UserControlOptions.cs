@@ -35,6 +35,7 @@ namespace SQLScriptExecute
             if (result == DialogResult.Yes)
             {
                 OptionData.Instance.ResetDefaultValues();
+                SetupRadioButtons();
             }
         }
 

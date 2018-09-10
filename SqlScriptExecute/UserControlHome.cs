@@ -46,8 +46,7 @@ namespace SQLScriptExecute
             buttonCancel.DataBindings.Add("Enabled", OptionData.Instance, "CancelButtonEnabled", true, DataSourceUpdateMode.OnPropertyChanged);
             buttonBrowse.DataBindings.Add("Enabled", OptionData.Instance, "RunButtonEnabled", true, DataSourceUpdateMode.OnPropertyChanged);
             buttonTest.DataBindings.Add("Enabled", OptionData.Instance, "RunButtonEnabled", true, DataSourceUpdateMode.OnPropertyChanged);
-            //progressBar1.DataBindings.Add("Value", OptionData.Instance, "ProgressBarValue", true, DataSourceUpdateMode.OnPropertyChanged);
-            //labelProgressPercent.DataBindings.Add("Text", OptionData.Instance, "ProgressPercentText", true, DataSourceUpdateMode.OnPropertyChanged);
+            checkBoxProcessErrorFile.DataBindings.Add("Checked", OptionData.Instance, "ProcessErrorFiles", true, DataSourceUpdateMode.OnPropertyChanged);
         }
 
 
@@ -56,8 +55,10 @@ namespace SQLScriptExecute
         -----------------------------------------------------*/
         private void buttonRun_Click(object sender, EventArgs e)
         {
+            //MessageBox.Show(Path.GetFileName(OptionData.Instance.ScriptsToExecutePath.Trim()));            
             if (OptionData.Instance.WarnBeforeRunning == true)
             {
+                //TODO: Move to Helper or OptionData
                 DialogResult result = MessageBox.Show("You are about to execute SQL Scripts." + Environment.NewLine + "You can Cancel while running but it will NOT rollback scripts that already executed." + Environment.NewLine + "Are you sure you want to continue?", "Message", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
                 if (result == DialogResult.No)
                 {
@@ -65,7 +66,6 @@ namespace SQLScriptExecute
                     return;
                 }
             }
-
             hp.ExecuteScripts();
         }
 
@@ -92,10 +92,24 @@ namespace SQLScriptExecute
         -----------------------------------------------------*/
         private void buttonBrowse_Click(object sender, EventArgs e)
         {
-            this.folderBrowserDialog1.SelectedPath = OptionData.Instance.ScriptsToExecutePath;
-            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            //TODO: Move to Helper or OptionData
+            //If checkBoxProcessErrorFile is true, Open file dialog to select Error file
+            if (checkBoxProcessErrorFile.Checked == true)
             {
-                textBoxScriptPath.Text = folderBrowserDialog1.SelectedPath;
+                openFileDialog1.Filter = "Error Files|*.err";
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    textBoxScriptPath.Text = openFileDialog1.FileName;
+                }
+            }
+            else
+            {
+                //Open Folder Dialog to the path that is currently in the textbox
+                this.folderBrowserDialog1.SelectedPath = textBoxScriptPath.Text;
+                if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    textBoxScriptPath.Text = folderBrowserDialog1.SelectedPath;
+                }
             }
         }
 
@@ -113,6 +127,14 @@ namespace SQLScriptExecute
         private void labelClickOpenLogPath_Click(object sender, EventArgs e)
         {
             hp.OpenLogLocation();
-        }        
+        }
+
+        private void checkBoxProcessErrorFile_Click(object sender, EventArgs e)
+        {
+            if (checkBoxProcessErrorFile.Checked == true)
+            {
+                buttonBrowse_Click(sender, e);
+            }            
+        }
     }
 }

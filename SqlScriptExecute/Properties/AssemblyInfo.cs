@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("WindowsModernForm")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("SQLScriptExecute")]
+[assembly: AssemblyDescription("This application will enumerate a chosen folder and execute all sql scripts within that folder location.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("WindowsModernForm")]
+[assembly: AssemblyCompany("Cotiviti, RCA Engineering - Architecture Team")]
+[assembly: AssemblyProduct("SQLScriptExecute")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

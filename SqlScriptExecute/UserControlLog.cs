@@ -11,22 +11,35 @@ namespace SQLScriptExecute
         {
             InitializeComponent();
 
-            OptionData od = OptionData.Instance;
+            //OptionData od = OptionData.Instance;
 
             //Binds WinForms Objects to Class Properties
-            checkBoxUseDefaultLogPath.DataBindings.Add("Checked", od, "UseDefaultLogPath", true, DataSourceUpdateMode.OnPropertyChanged);
-            textBoxLogPath.DataBindings.Add("Text", od, "LogPath", true, DataSourceUpdateMode.OnPropertyChanged);
-            checkBoxLogCreateExcel.DataBindings.Add("Checked", od, "CreateExcelLog", true, DataSourceUpdateMode.OnPropertyChanged);
-            checkBoxLogErrorsOnly.DataBindings.Add("Checked", od, "LogErrorsOnly", true, DataSourceUpdateMode.OnPropertyChanged);
+            checkBoxUseDefaultLogPath.DataBindings.Add("Checked", OptionData.Instance, "UseDefaultLogPath", true, DataSourceUpdateMode.OnPropertyChanged);
+            textBoxLogPath.DataBindings.Add("Text", OptionData.Instance, "LogPath", true, DataSourceUpdateMode.OnPropertyChanged);
+            checkBoxLogCreateExcel.DataBindings.Add("Checked", OptionData.Instance, "CreateExcelLog", true, DataSourceUpdateMode.OnPropertyChanged);
+            checkBoxLogErrorsOnly.DataBindings.Add("Checked", OptionData.Instance, "LogErrorsOnly", true, DataSourceUpdateMode.OnPropertyChanged);
+            labelLogFileName.DataBindings.Add("Text", OptionData.Instance, "LogFileName", true, DataSourceUpdateMode.OnPropertyChanged);
+
+            //Manual bind to allow CheckBox checkBoxUseDefaultLogPath to control LogPath TextBox and Button Browse Enabled
+            Binding bind = new Binding("Enabled", OptionData.Instance, "UseDefaultLogPath");
+            Binding bind2 = new Binding("Enabled", OptionData.Instance, "UseDefaultLogPath");
+            bind.Format += SwitchBool;
+            bind.Parse += SwitchBool;
+            bind2.Format += SwitchBool;
+            bind2.Parse += SwitchBool;
+
+            textBoxLogPath.DataBindings.Add(bind);
+            buttonLogBrowse.DataBindings.Add(bind2);
         }
 
         /*-----------------------------------------------------
-        Control Load
+        Switch Boolean Value
         -----------------------------------------------------*/
-        private void UserControlLog_Load(object sender, EventArgs e)
+        private void SwitchBool(object sender, ConvertEventArgs e)
         {
-            checkBoxUseDefaultLogPath_Click(sender, e);
+            e.Value = !((bool)e.Value);
         }
+
 
         /*-----------------------------------------------------
         Log Browse Clicked
@@ -37,24 +50,7 @@ namespace SQLScriptExecute
             {
                 textBoxLogPath.Text = folderBrowserDialog1.SelectedPath;
             }
-        }
-
-        /*-----------------------------------------------------
-        checkBoxUseDefaultLogPath Clicked
-        -----------------------------------------------------*/
-        private void checkBoxUseDefaultLogPath_Click(object sender, EventArgs e)
-        {
-            if (checkBoxUseDefaultLogPath.Checked)
-            {
-                textBoxLogPath.Enabled = false;
-                buttonLogBrowse.Enabled = false;
-            }
-            else
-            {
-                textBoxLogPath.Enabled = true;
-                buttonLogBrowse.Enabled = true;
-            }
-        }
+        }      
         
     }
 }

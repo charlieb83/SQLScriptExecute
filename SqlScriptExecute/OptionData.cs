@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;  //CallerMemberName
 
 
@@ -72,12 +73,13 @@ namespace SQLScriptExecute
         private string _ProgressPercentText = "0%";
         private int _progressBarValue = 0;
         private string _textBoxStatusLog { get; set; } = "";
+        private bool _processErrorFiles = Properties.Settings.Default.ProcessErrorFiles;
+
         //public List<string> Servers { get; set; }        
         public int FileTotalCount { get; set; } = 0;
         public int FileSuccessfullUpdateCount { get; set; } = 0;
         public int FilesErrorCount { get; set; } = 0;
-
-        public List<string> ErrorFileNames { get; set; }
+        public List<string> ErrorListFileNames { get; set; }
         public string LogFileName { get; set; } = "";
 
         //Excel FileName (Set from LogFileName)
@@ -89,7 +91,7 @@ namespace SQLScriptExecute
         //Error FileName (Set from LogFileName)
         public string ErrorFileName
         {
-            get { return LogPath + @"\" + "ERROR_" + LogFileName + @".err"; }
+            get { return LogPath + @"\" + "Error_" + LogFileName + @".err"; }
         }
 
         //Create Excel Log        
@@ -281,7 +283,7 @@ namespace SQLScriptExecute
                 _useDefaultLogPath = value;
                 if (_useDefaultLogPath == true)
                 {
-                    _logPath = _scriptsToExecutePath;
+                    _logPath = GetLogPath();
                 }
                 NotifyPropertyChanged();
             }
@@ -295,7 +297,7 @@ namespace SQLScriptExecute
             {
                 if (_useDefaultLogPath == true)
                 {
-                    _logPath = _scriptsToExecutePath;
+                    _logPath = GetLogPath();   
                 }
                 else
                 {
@@ -314,7 +316,7 @@ namespace SQLScriptExecute
 
                 if (_useDefaultLogPath == true)
                 {
-                    _logPath = _scriptsToExecutePath;
+                    _logPath = GetLogPath();
                 }
                 SetScriptCount();
                 BuildLogFileName(); //Log FileName is the root folder of the scripts to Execute path
@@ -357,27 +359,101 @@ namespace SQLScriptExecute
             }
         }
 
+        //ProcessErrorFiles        
+        public bool ProcessErrorFiles
+        {
+            get { return _processErrorFiles; }
+            set
+            {
+                _processErrorFiles = value;
+                SetScriptCount();
+                NotifyPropertyChanged();
+            }
+        }
+
         /*-----------------------------------------------------
         Set Total Script Count
         -----------------------------------------------------*/
         private void SetScriptCount()
         {
             string fileFilter = "*.sql";
-            if (string.IsNullOrWhiteSpace(ScriptsToExecutePath))
+            if (string.IsNullOrWhiteSpace(ScriptsToExecutePath) || ScriptsToExecutePath == "Invalid")
             {
+                FileTotalCount = 0;
                 return;
             }
 
-            SearchOption option = IncludeSubFolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;            
-            try
+            if (ProcessErrorFiles == false)
             {
-                FileTotalCount = Directory.GetFiles(ScriptsToExecutePath, fileFilter, option).Length;
+                //Process normal Folder for .sql files
+                SearchOption option = IncludeSubFolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+                try
+                {
+                    FileTotalCount = Directory.GetFiles(ScriptsToExecutePath, fileFilter, option).Length;
+                    //Reset other counters
+                    FileSuccessfullUpdateCount = 0;
+                    FilesErrorCount = 0;
+                }
+                catch //(Exception ex)
+                {
+                    //TODO: FIX THIS!
+                    //System.Windows.Forms.MessageBox.Show(ex.Message);
+                    ScriptsToExecutePath = "Invalid";                
+                    FileTotalCount = 0;
+                }
             }
-            catch (Exception ex)
+            else
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                try
+                {
+                    //Process an error file
+                    IEnumerable<string> validItems = Enumerable.Empty<string>();
+                    var scriptFile = File.ReadAllLines(ScriptsToExecutePath);
+                    validItems = new List<string>(scriptFile).Skip(1);
+                    FileTotalCount = validItems.Count();
+                    //Reset other counters
+                    FileSuccessfullUpdateCount = 0;
+                    FilesErrorCount = 0;
+                }
+                catch //(Exception ex)
+                {
+                    ScriptsToExecutePath = "Invalid";
+                    FileTotalCount = 0;
+                }
             }
         }
+
+        /*-----------------------------------------------------
+        Returns LogPath based on Processing an Error file or Normal sql files
+        -----------------------------------------------------*/
+        private string GetLogPath()
+        {
+            string returnLogPath = "";
+
+            try
+            {
+                FileAttributes attr = File.GetAttributes(OptionData.Instance.ScriptsToExecutePath.Trim());
+                if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+                {
+                    //MessageBox.Show("Its a directory");
+                    returnLogPath = _scriptsToExecutePath.Trim();
+                }
+                else
+                {
+                    //MessageBox.Show("Its a file");
+                    returnLogPath = Path.GetDirectoryName(_scriptsToExecutePath.Trim());
+                }
+
+            }
+            catch
+            {
+                //MessageBox.Show("Its neither");
+                returnLogPath = "";
+            }
+
+            return returnLogPath;
+        }
+
 
         /*-----------------------------------------------------
         Builds Log FileName (Needs to be built at Runtime for Datestamp)
@@ -385,22 +461,43 @@ namespace SQLScriptExecute
         public void BuildLogFileName()
         {
             // Set LogName when Script Path is given
-            string tempLogName = "";
             string dirName = "";
 
             //Get Log FileName
-            if (string.IsNullOrWhiteSpace(_scriptsToExecutePath))
+            //if (string.IsNullOrWhiteSpace(_scriptsToExecutePath))
+            //{
+            //    dirName = "log";
+            //}
+            //else
+            //{
+            //Process normal Folder for .sql files
+            if (ProcessErrorFiles == false)
             {
-                dirName = "log";
+                try
+                {
+                    dirName = new DirectoryInfo(_scriptsToExecutePath.Trim()).Name;
+                }
+                catch
+                {
+                    dirName = "Log";
+                }
             }
+            //Process an error file
             else
             {
-                dirName = new DirectoryInfo(_scriptsToExecutePath.Trim()).Name;
+                try
+                {
+                    dirName = "Error_" + new DirectoryInfo(Path.GetDirectoryName(_scriptsToExecutePath.Trim())).Name;
+                }
+                catch
+                {
+                    dirName = "Error_";                    
+                }
+                    
             }
-            tempLogName = dirName + "_" + DateTime.Now.ToString("yyyyMMddHHmmss");
-
+            //}
             //Sets Class LogFileName
-            LogFileName = tempLogName.Replace(@"\", "").Replace(":", "");
+            LogFileName = dirName.Replace(@"\", "").Replace(":", "");
         }
 
         /*-----------------------------------------------------
@@ -420,6 +517,7 @@ namespace SQLScriptExecute
             Properties.Settings.Default.ExecuteScriptsUntilFinished = this.ExecuteScriptsUntilFinished;
             Properties.Settings.Default.StopAfterErrorCount = this.StopAfterErrorCount;
             Properties.Settings.Default.ConsecutiveErrors = this.ConsecutiveErrors;
+            Properties.Settings.Default.ProcessErrorFiles = this.ProcessErrorFiles;
             Properties.Settings.Default.Save();
         }
 
@@ -440,8 +538,9 @@ namespace SQLScriptExecute
             this.ExecuteScriptsUntilFinished = Properties.Settings.Default.ExecuteScriptsUntilFinished;
             this.StopAfterErrorCount = Properties.Settings.Default.StopAfterErrorCount;
             this.ConsecutiveErrors = Properties.Settings.Default.ConsecutiveErrors;
+            this.ProcessErrorFiles = Properties.Settings.Default.ProcessErrorFiles;
             SetScriptCount();
-            this.ErrorFileNames = new List<string>();
+            this.ErrorListFileNames = new List<string>();
             BuildLogFileName();
         }
 
@@ -463,6 +562,7 @@ namespace SQLScriptExecute
             this.ExecuteScriptsUntilFinished = Properties.Settings.Default.ExecuteScriptsUntilFinished;
             this.StopAfterErrorCount = Properties.Settings.Default.StopAfterErrorCount;
             this.ConsecutiveErrors = Properties.Settings.Default.ConsecutiveErrors;
+            this.ProcessErrorFiles = false;
             //CreateExcelLog = true;
             //LogErrorsOnly = false;
             //IncludeSubFolders = true;

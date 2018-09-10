@@ -60,6 +60,8 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.labelClickOpenLogPath = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.checkBoxProcessErrorFile = new System.Windows.Forms.CheckBox();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -69,7 +71,7 @@
             this.textBoxStatus.BackColor = System.Drawing.Color.White;
             this.textBoxStatus.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxStatus.Location = new System.Drawing.Point(0, 188);
-            this.textBoxStatus.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBoxStatus.Margin = new System.Windows.Forms.Padding(2);
             this.textBoxStatus.Multiline = true;
             this.textBoxStatus.Name = "textBoxStatus";
             this.textBoxStatus.ReadOnly = true;
@@ -84,8 +86,8 @@
             this.buttonRun.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonRun.Image = ((System.Drawing.Image)(resources.GetObject("buttonRun.Image")));
             this.buttonRun.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonRun.Location = new System.Drawing.Point(308, 93);
-            this.buttonRun.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonRun.Location = new System.Drawing.Point(269, 93);
+            this.buttonRun.Margin = new System.Windows.Forms.Padding(2);
             this.buttonRun.Name = "buttonRun";
             this.buttonRun.Size = new System.Drawing.Size(124, 41);
             this.buttonRun.TabIndex = 14;
@@ -97,7 +99,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(29, 57);
+            this.label3.Location = new System.Drawing.Point(29, 59);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(82, 20);
@@ -108,7 +110,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(53, 23);
+            this.label2.Location = new System.Drawing.Point(29, 28);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(53, 20);
@@ -119,8 +121,8 @@
             // 
             this.comboBoxServer.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBoxServer.FormattingEnabled = true;
-            this.comboBoxServer.Location = new System.Drawing.Point(111, 23);
-            this.comboBoxServer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.comboBoxServer.Location = new System.Drawing.Point(111, 21);
+            this.comboBoxServer.Margin = new System.Windows.Forms.Padding(2);
             this.comboBoxServer.Name = "comboBoxServer";
             this.comboBoxServer.Size = new System.Drawing.Size(585, 28);
             this.comboBoxServer.TabIndex = 11;
@@ -128,8 +130,8 @@
             // buttonBrowse
             // 
             this.buttonBrowse.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonBrowse.Location = new System.Drawing.Point(706, 52);
-            this.buttonBrowse.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonBrowse.Location = new System.Drawing.Point(706, 55);
+            this.buttonBrowse.Margin = new System.Windows.Forms.Padding(2);
             this.buttonBrowse.Name = "buttonBrowse";
             this.buttonBrowse.Size = new System.Drawing.Size(101, 27);
             this.buttonBrowse.TabIndex = 10;
@@ -140,8 +142,8 @@
             // textBoxScriptPath
             // 
             this.textBoxScriptPath.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxScriptPath.Location = new System.Drawing.Point(111, 55);
-            this.textBoxScriptPath.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBoxScriptPath.Location = new System.Drawing.Point(111, 56);
+            this.textBoxScriptPath.Margin = new System.Windows.Forms.Padding(2);
             this.textBoxScriptPath.Name = "textBoxScriptPath";
             this.textBoxScriptPath.Size = new System.Drawing.Size(585, 27);
             this.textBoxScriptPath.TabIndex = 9;
@@ -149,8 +151,8 @@
             // buttonTest
             // 
             this.buttonTest.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonTest.Location = new System.Drawing.Point(706, 20);
-            this.buttonTest.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonTest.Location = new System.Drawing.Point(706, 22);
+            this.buttonTest.Margin = new System.Windows.Forms.Padding(2);
             this.buttonTest.Name = "buttonTest";
             this.buttonTest.Size = new System.Drawing.Size(101, 26);
             this.buttonTest.TabIndex = 16;
@@ -164,8 +166,8 @@
             this.buttonCancel.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonCancel.Image = ((System.Drawing.Image)(resources.GetObject("buttonCancel.Image")));
             this.buttonCancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonCancel.Location = new System.Drawing.Point(479, 93);
-            this.buttonCancel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonCancel.Location = new System.Drawing.Point(440, 93);
+            this.buttonCancel.Margin = new System.Windows.Forms.Padding(2);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(124, 41);
             this.buttonCancel.TabIndex = 14;
@@ -298,7 +300,7 @@
             this.labelScriptErrorCount.AutoSize = true;
             this.labelScriptErrorCount.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelScriptErrorCount.ForeColor = System.Drawing.Color.Red;
-            this.labelScriptErrorCount.Location = new System.Drawing.Point(509, 12);
+            this.labelScriptErrorCount.Location = new System.Drawing.Point(523, 12);
             this.labelScriptErrorCount.Name = "labelScriptErrorCount";
             this.labelScriptErrorCount.Size = new System.Drawing.Size(36, 20);
             this.labelScriptErrorCount.TabIndex = 33;
@@ -308,7 +310,7 @@
             // 
             this.labelScriptsInQueueCount.AutoSize = true;
             this.labelScriptsInQueueCount.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelScriptsInQueueCount.Location = new System.Drawing.Point(112, 12);
+            this.labelScriptsInQueueCount.Location = new System.Drawing.Point(115, 12);
             this.labelScriptsInQueueCount.Name = "labelScriptsInQueueCount";
             this.labelScriptsInQueueCount.Size = new System.Drawing.Size(36, 20);
             this.labelScriptsInQueueCount.TabIndex = 34;
@@ -318,7 +320,7 @@
             // 
             this.labelScriptsUpdatedCount.AutoSize = true;
             this.labelScriptsUpdatedCount.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelScriptsUpdatedCount.Location = new System.Drawing.Point(301, 11);
+            this.labelScriptsUpdatedCount.Location = new System.Drawing.Point(317, 12);
             this.labelScriptsUpdatedCount.Name = "labelScriptsUpdatedCount";
             this.labelScriptsUpdatedCount.Size = new System.Drawing.Size(36, 20);
             this.labelScriptsUpdatedCount.TabIndex = 35;
@@ -328,7 +330,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(421, 12);
+            this.label1.Location = new System.Drawing.Point(432, 11);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(92, 20);
             this.label1.TabIndex = 30;
@@ -348,7 +350,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(188, 12);
+            this.label4.Location = new System.Drawing.Point(201, 11);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(118, 20);
             this.label4.TabIndex = 32;
@@ -405,10 +407,27 @@
             this.groupBox2.TabIndex = 37;
             this.groupBox2.TabStop = false;
             // 
+            // checkBoxProcessErrorFile
+            // 
+            this.checkBoxProcessErrorFile.AutoSize = true;
+            this.checkBoxProcessErrorFile.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBoxProcessErrorFile.Location = new System.Drawing.Point(667, 101);
+            this.checkBoxProcessErrorFile.Name = "checkBoxProcessErrorFile";
+            this.checkBoxProcessErrorFile.Size = new System.Drawing.Size(140, 24);
+            this.checkBoxProcessErrorFile.TabIndex = 38;
+            this.checkBoxProcessErrorFile.Text = "Process Error File";
+            this.checkBoxProcessErrorFile.UseVisualStyleBackColor = true;
+            this.checkBoxProcessErrorFile.Click += new System.EventHandler(this.checkBoxProcessErrorFile_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // UserControlHome
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.checkBoxProcessErrorFile);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonTest);
             this.Controls.Add(this.textBoxStatus);
@@ -420,7 +439,7 @@
             this.Controls.Add(this.buttonBrowse);
             this.Controls.Add(this.textBoxScriptPath);
             this.Controls.Add(this.groupBox2);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "UserControlHome";
             this.Size = new System.Drawing.Size(1035, 658);
             this.groupBox1.ResumeLayout(false);
@@ -464,5 +483,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label labelClickOpenLogPath;
+        private System.Windows.Forms.CheckBox checkBoxProcessErrorFile;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
