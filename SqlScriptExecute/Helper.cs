@@ -180,7 +180,7 @@ namespace SQLScriptExecute
 
             //Check to make sure scripts exist in selected file location
             this.AppendTextBoxStatusWithTimeStamp("Checking Path For SQL Script File Count.....");
-            if (od.FileTotalCount == 0)
+            if (od.FileTotalCount <= 0)
             {
                 this.AppendTextBoxStatus("Failed\r\n" + "There are 0 sql scripts found\r\n");
                 return;
@@ -223,9 +223,9 @@ namespace SQLScriptExecute
         -----------------------------------------------------*/
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            DateTime startTime = DateTime.Now;
             od.WorkerIsBusy = true;
-
+            DateTime startTime = DateTime.Now;
+            
             string fileFilter = "*.sql";
             string sqlScriptFile;
             string scriptsPath = "";
@@ -544,14 +544,18 @@ namespace SQLScriptExecute
         -----------------------------------------------------*/
         private void WriteErrorFile(DateTime startTime, int totalFiles,  int errorCount)
         {
-            using (TextWriter tw = new StreamWriter(od.ErrorFileName))
+            //Only write file if there are Errors
+            if (errorCount > 0 )
             {
-                //Write Header to error file
-                tw.WriteLine("HEADER----StartTime:" + startTime.ToString("yyyyMMddHHmmss") + ", TotalFilesDuringThisRun: " + totalFiles.ToString() + ", ErrorCount: " + errorCount.ToString());
+                using (TextWriter tw = new StreamWriter(od.ErrorFileName))
+                {
+                    //Write Header to error file
+                    tw.WriteLine("HEADER----StartTime:" + startTime.ToString("yyyyMMddHHmmss") + ", TotalFilesDuringThisRun: " + totalFiles.ToString() + ", ErrorCount: " + errorCount.ToString());
 
-                foreach (String s in od.ErrorListFileNames)
-                    tw.WriteLine(s);
-            }
+                    foreach (String s in od.ErrorListFileNames)
+                        tw.WriteLine(s);
+                }
+            }            
         }
 
     }
