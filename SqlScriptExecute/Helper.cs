@@ -88,7 +88,7 @@ namespace SQLScriptExecute
                             s += "Invalid Error File - Header is Invalid." + System.Environment.NewLine;
                         }
                     }
-                    catch (Exception ex)
+                    catch //(Exception ex)
                     {
                         s += "Invalid Error File" + System.Environment.NewLine;
                     }
