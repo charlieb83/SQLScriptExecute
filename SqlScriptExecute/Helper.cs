@@ -85,7 +85,7 @@ namespace SQLScriptExecute
 
                         if (t.Substring(0, 20) != "HEADER----StartTime:")
                         {
-                            s += "Invalid Error File - Header is Invalid." + System.Environment.NewLine;
+                            s += "Invalid Error File - Header is Invalid" + System.Environment.NewLine;
                         }
                     }
                     catch //(Exception ex)
