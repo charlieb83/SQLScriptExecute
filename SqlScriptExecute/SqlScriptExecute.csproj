@@ -164,6 +164,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icons8_data_backup_50_icon.ico" />
+    <None Include="Resources\spinner_32.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

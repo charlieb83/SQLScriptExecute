@@ -51,10 +51,10 @@
             this.groupBox4.Controls.Add(this.radioButtonStopAfterError);
             this.groupBox4.Controls.Add(this.radioButtonKeepExecutingUntilFinished);
             this.groupBox4.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox4.Location = new System.Drawing.Point(274, 246);
-            this.groupBox4.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox4.Location = new System.Drawing.Point(233, 250);
+            this.groupBox4.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox4.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox4.Size = new System.Drawing.Size(438, 131);
             this.groupBox4.TabIndex = 8;
             this.groupBox4.TabStop = false;
@@ -64,7 +64,7 @@
             // 
             this.checkBoxConsecutiveErrors.AutoSize = true;
             this.checkBoxConsecutiveErrors.Location = new System.Drawing.Point(293, 76);
-            this.checkBoxConsecutiveErrors.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.checkBoxConsecutiveErrors.Margin = new System.Windows.Forms.Padding(2);
             this.checkBoxConsecutiveErrors.Name = "checkBoxConsecutiveErrors";
             this.checkBoxConsecutiveErrors.Size = new System.Drawing.Size(107, 24);
             this.checkBoxConsecutiveErrors.TabIndex = 4;
@@ -136,7 +136,7 @@
             "49",
             "50"});
             this.comboBoxErrorReceivedCount.Location = new System.Drawing.Point(124, 72);
-            this.comboBoxErrorReceivedCount.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.comboBoxErrorReceivedCount.Margin = new System.Windows.Forms.Padding(2);
             this.comboBoxErrorReceivedCount.Name = "comboBoxErrorReceivedCount";
             this.comboBoxErrorReceivedCount.Size = new System.Drawing.Size(52, 28);
             this.comboBoxErrorReceivedCount.TabIndex = 2;
@@ -145,7 +145,7 @@
             // 
             this.radioButtonStopAfterError.AutoSize = true;
             this.radioButtonStopAfterError.Location = new System.Drawing.Point(30, 76);
-            this.radioButtonStopAfterError.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.radioButtonStopAfterError.Margin = new System.Windows.Forms.Padding(2);
             this.radioButtonStopAfterError.Name = "radioButtonStopAfterError";
             this.radioButtonStopAfterError.Size = new System.Drawing.Size(95, 24);
             this.radioButtonStopAfterError.TabIndex = 1;
@@ -158,7 +158,7 @@
             // 
             this.radioButtonKeepExecutingUntilFinished.AutoSize = true;
             this.radioButtonKeepExecutingUntilFinished.Location = new System.Drawing.Point(30, 24);
-            this.radioButtonKeepExecutingUntilFinished.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.radioButtonKeepExecutingUntilFinished.Margin = new System.Windows.Forms.Padding(2);
             this.radioButtonKeepExecutingUntilFinished.Name = "radioButtonKeepExecutingUntilFinished";
             this.radioButtonKeepExecutingUntilFinished.Size = new System.Drawing.Size(270, 24);
             this.radioButtonKeepExecutingUntilFinished.TabIndex = 0;
@@ -173,10 +173,10 @@
             this.groupBox3.Controls.Add(this.checkBoxWarnBeforeExecuting);
             this.groupBox3.Controls.Add(this.checkBoxIncludeSubfolders);
             this.groupBox3.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox3.Location = new System.Drawing.Point(274, 114);
-            this.groupBox3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox3.Location = new System.Drawing.Point(233, 118);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox3.Size = new System.Drawing.Size(438, 115);
             this.groupBox3.TabIndex = 7;
             this.groupBox3.TabStop = false;
@@ -187,7 +187,7 @@
             this.checkBoxWarnBeforeExecuting.AutoSize = true;
             this.checkBoxWarnBeforeExecuting.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBoxWarnBeforeExecuting.Location = new System.Drawing.Point(30, 67);
-            this.checkBoxWarnBeforeExecuting.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.checkBoxWarnBeforeExecuting.Margin = new System.Windows.Forms.Padding(2);
             this.checkBoxWarnBeforeExecuting.Name = "checkBoxWarnBeforeExecuting";
             this.checkBoxWarnBeforeExecuting.Size = new System.Drawing.Size(178, 24);
             this.checkBoxWarnBeforeExecuting.TabIndex = 3;
@@ -199,7 +199,7 @@
             this.checkBoxIncludeSubfolders.AutoSize = true;
             this.checkBoxIncludeSubfolders.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBoxIncludeSubfolders.Location = new System.Drawing.Point(30, 28);
-            this.checkBoxIncludeSubfolders.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.checkBoxIncludeSubfolders.Margin = new System.Windows.Forms.Padding(2);
             this.checkBoxIncludeSubfolders.Name = "checkBoxIncludeSubfolders";
             this.checkBoxIncludeSubfolders.Size = new System.Drawing.Size(151, 24);
             this.checkBoxIncludeSubfolders.TabIndex = 0;
@@ -210,7 +210,7 @@
             // 
             this.buttonRestoreDefaults.AutoSize = true;
             this.buttonRestoreDefaults.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonRestoreDefaults.Location = new System.Drawing.Point(391, 428);
+            this.buttonRestoreDefaults.Location = new System.Drawing.Point(350, 432);
             this.buttonRestoreDefaults.Name = "buttonRestoreDefaults";
             this.buttonRestoreDefaults.Size = new System.Drawing.Size(165, 42);
             this.buttonRestoreDefaults.TabIndex = 21;
@@ -225,9 +225,9 @@
             this.Controls.Add(this.buttonRestoreDefaults);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "UserControlOptions";
-            this.Size = new System.Drawing.Size(1035, 658);
+            this.Size = new System.Drawing.Size(924, 640);
             this.Load += new System.EventHandler(this.UserControlOptions_Load);
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();

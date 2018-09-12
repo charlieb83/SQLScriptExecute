@@ -236,6 +236,7 @@ namespace SQLScriptExecute
             int consecutiveErrorCount = 0;
             string exceptionMessage = "";
             string status = "";
+            string fileName = "";
 
             //LogFile - Append timestamp to FileName
             od.LogFileName += "_" + startTime.ToString("yyyyMMddHHmmss"); 
@@ -284,7 +285,10 @@ namespace SQLScriptExecute
                     {
                         currentCount++;
                         sqlScriptFile = File.ReadAllText(file);
-                        AppendTextBoxStatusWithTimeStamp(file);
+
+                        fileName =  Path.GetFileName(file);
+                        AppendTextBoxStatusWithTimeStamp(fileName); //Writes whole path
+                        //AppendTextBoxStatusWithTimeStamp(file); //Writes whole path
 
                         exceptionMessage = "";
 
@@ -427,7 +431,7 @@ namespace SQLScriptExecute
         }
 
        /*-----------------------------------------------------
-       Test If Conncection to SQL Server Is Valid
+       Cancel Process
        -----------------------------------------------------*/
         public void CancelProcess()
         {
@@ -550,7 +554,7 @@ namespace SQLScriptExecute
                 using (TextWriter tw = new StreamWriter(od.ErrorFileName))
                 {
                     //Write Header to error file
-                    tw.WriteLine("HEADER----StartTime:" + startTime.ToString("yyyyMMddHHmmss") + ", TotalFilesDuringThisRun: " + totalFiles.ToString() + ", ErrorCount: " + errorCount.ToString());
+                    tw.WriteLine("HEADER----StartTime:" + startTime.ToString("yyyyMMddHHmmss") + ", TotalFilesRun: " + totalFiles.ToString() + ", ErrorCount: " + errorCount.ToString());
 
                     foreach (String s in od.ErrorListFileNames)
                         tw.WriteLine(s);

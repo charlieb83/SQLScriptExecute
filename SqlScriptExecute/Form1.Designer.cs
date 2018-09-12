@@ -40,7 +40,7 @@
             this.buttonConnections = new System.Windows.Forms.Button();
             this.buttonHome = new System.Windows.Forms.Button();
             this.panelTitleBar = new System.Windows.Forms.Panel();
-            this.button7 = new System.Windows.Forms.Button();
+            this.buttonMinimize = new System.Windows.Forms.Button();
             this.buttonCloseForm = new System.Windows.Forms.Button();
             this.labelProgressPercent = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
@@ -70,7 +70,7 @@
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(242, 708);
+            this.panel1.Size = new System.Drawing.Size(229, 688);
             this.panel1.TabIndex = 0;
             // 
             // label1
@@ -111,10 +111,10 @@
             // panelIndicator
             // 
             this.panelIndicator.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(153)))), ((int)(((byte)(255)))));
-            this.panelIndicator.Location = new System.Drawing.Point(0, 81);
+            this.panelIndicator.Location = new System.Drawing.Point(0, 84);
             this.panelIndicator.Margin = new System.Windows.Forms.Padding(2);
             this.panelIndicator.Name = "panelIndicator";
-            this.panelIndicator.Size = new System.Drawing.Size(13, 79);
+            this.panelIndicator.Size = new System.Drawing.Size(13, 63);
             this.panelIndicator.TabIndex = 2;
             // 
             // buttonInfo
@@ -126,10 +126,10 @@
             this.buttonInfo.ForeColor = System.Drawing.Color.White;
             this.buttonInfo.Image = ((System.Drawing.Image)(resources.GetObject("buttonInfo.Image")));
             this.buttonInfo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonInfo.Location = new System.Drawing.Point(17, 401);
+            this.buttonInfo.Location = new System.Drawing.Point(17, 364);
             this.buttonInfo.Margin = new System.Windows.Forms.Padding(2);
             this.buttonInfo.Name = "buttonInfo";
-            this.buttonInfo.Size = new System.Drawing.Size(225, 79);
+            this.buttonInfo.Size = new System.Drawing.Size(212, 63);
             this.buttonInfo.TabIndex = 0;
             this.buttonInfo.Text = "     Info";
             this.buttonInfo.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -145,10 +145,10 @@
             this.buttonLog.ForeColor = System.Drawing.Color.White;
             this.buttonLog.Image = ((System.Drawing.Image)(resources.GetObject("buttonLog.Image")));
             this.buttonLog.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonLog.Location = new System.Drawing.Point(17, 321);
+            this.buttonLog.Location = new System.Drawing.Point(17, 294);
             this.buttonLog.Margin = new System.Windows.Forms.Padding(2);
             this.buttonLog.Name = "buttonLog";
-            this.buttonLog.Size = new System.Drawing.Size(225, 79);
+            this.buttonLog.Size = new System.Drawing.Size(212, 63);
             this.buttonLog.TabIndex = 0;
             this.buttonLog.Text = "     Log";
             this.buttonLog.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -164,10 +164,10 @@
             this.buttonOptions.ForeColor = System.Drawing.Color.White;
             this.buttonOptions.Image = ((System.Drawing.Image)(resources.GetObject("buttonOptions.Image")));
             this.buttonOptions.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonOptions.Location = new System.Drawing.Point(17, 241);
+            this.buttonOptions.Location = new System.Drawing.Point(17, 224);
             this.buttonOptions.Margin = new System.Windows.Forms.Padding(2);
             this.buttonOptions.Name = "buttonOptions";
-            this.buttonOptions.Size = new System.Drawing.Size(225, 79);
+            this.buttonOptions.Size = new System.Drawing.Size(212, 63);
             this.buttonOptions.TabIndex = 0;
             this.buttonOptions.Text = "     Options";
             this.buttonOptions.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -183,10 +183,10 @@
             this.buttonConnections.ForeColor = System.Drawing.Color.White;
             this.buttonConnections.Image = ((System.Drawing.Image)(resources.GetObject("buttonConnections.Image")));
             this.buttonConnections.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonConnections.Location = new System.Drawing.Point(17, 161);
+            this.buttonConnections.Location = new System.Drawing.Point(17, 154);
             this.buttonConnections.Margin = new System.Windows.Forms.Padding(2);
             this.buttonConnections.Name = "buttonConnections";
-            this.buttonConnections.Size = new System.Drawing.Size(225, 79);
+            this.buttonConnections.Size = new System.Drawing.Size(212, 63);
             this.buttonConnections.TabIndex = 0;
             this.buttonConnections.Text = "     Connections";
             this.buttonConnections.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -202,10 +202,10 @@
             this.buttonHome.ForeColor = System.Drawing.Color.White;
             this.buttonHome.Image = ((System.Drawing.Image)(resources.GetObject("buttonHome.Image")));
             this.buttonHome.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonHome.Location = new System.Drawing.Point(17, 81);
+            this.buttonHome.Location = new System.Drawing.Point(17, 84);
             this.buttonHome.Margin = new System.Windows.Forms.Padding(2);
             this.buttonHome.Name = "buttonHome";
-            this.buttonHome.Size = new System.Drawing.Size(225, 79);
+            this.buttonHome.Size = new System.Drawing.Size(212, 63);
             this.buttonHome.TabIndex = 0;
             this.buttonHome.Text = "     Home";
             this.buttonHome.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -215,34 +215,35 @@
             // panelTitleBar
             // 
             this.panelTitleBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(153)))), ((int)(((byte)(255)))));
-            this.panelTitleBar.Controls.Add(this.button7);
+            this.panelTitleBar.Controls.Add(this.buttonMinimize);
             this.panelTitleBar.Controls.Add(this.buttonCloseForm);
             this.panelTitleBar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelTitleBar.Location = new System.Drawing.Point(242, 0);
+            this.panelTitleBar.Location = new System.Drawing.Point(229, 0);
             this.panelTitleBar.Margin = new System.Windows.Forms.Padding(2);
             this.panelTitleBar.Name = "panelTitleBar";
-            this.panelTitleBar.Size = new System.Drawing.Size(1035, 20);
+            this.panelTitleBar.Size = new System.Drawing.Size(924, 20);
             this.panelTitleBar.TabIndex = 1;
             this.panelTitleBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelTitleBar_MouseDown);
             // 
-            // button7
+            // buttonMinimize
             // 
-            this.button7.FlatAppearance.BorderSize = 0;
-            this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button7.Image = ((System.Drawing.Image)(resources.GetObject("button7.Image")));
-            this.button7.Location = new System.Drawing.Point(983, 0);
-            this.button7.Margin = new System.Windows.Forms.Padding(2);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(19, 18);
-            this.button7.TabIndex = 3;
-            this.button7.UseVisualStyleBackColor = true;
+            this.buttonMinimize.FlatAppearance.BorderSize = 0;
+            this.buttonMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonMinimize.Image = ((System.Drawing.Image)(resources.GetObject("buttonMinimize.Image")));
+            this.buttonMinimize.Location = new System.Drawing.Point(873, 0);
+            this.buttonMinimize.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonMinimize.Name = "buttonMinimize";
+            this.buttonMinimize.Size = new System.Drawing.Size(19, 18);
+            this.buttonMinimize.TabIndex = 3;
+            this.buttonMinimize.UseVisualStyleBackColor = true;
+            this.buttonMinimize.Click += new System.EventHandler(this.buttonMinimize_Click);
             // 
             // buttonCloseForm
             // 
             this.buttonCloseForm.FlatAppearance.BorderSize = 0;
             this.buttonCloseForm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonCloseForm.Image = ((System.Drawing.Image)(resources.GetObject("buttonCloseForm.Image")));
-            this.buttonCloseForm.Location = new System.Drawing.Point(1011, 0);
+            this.buttonCloseForm.Location = new System.Drawing.Point(900, 0);
             this.buttonCloseForm.Margin = new System.Windows.Forms.Padding(2);
             this.buttonCloseForm.Name = "buttonCloseForm";
             this.buttonCloseForm.Size = new System.Drawing.Size(19, 18);
@@ -255,7 +256,7 @@
             this.labelProgressPercent.AutoSize = true;
             this.labelProgressPercent.BackColor = System.Drawing.Color.Transparent;
             this.labelProgressPercent.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelProgressPercent.Location = new System.Drawing.Point(247, 686);
+            this.labelProgressPercent.Location = new System.Drawing.Point(1112, 666);
             this.labelProgressPercent.Name = "labelProgressPercent";
             this.labelProgressPercent.Size = new System.Drawing.Size(38, 15);
             this.labelProgressPercent.TabIndex = 41;
@@ -263,65 +264,65 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(291, 682);
+            this.progressBar1.Location = new System.Drawing.Point(229, 662);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(985, 23);
+            this.progressBar1.Size = new System.Drawing.Size(876, 23);
             this.progressBar1.TabIndex = 40;
             // 
             // userControlHome1
             // 
-            this.userControlHome1.Location = new System.Drawing.Point(242, 21);
-            this.userControlHome1.Margin = new System.Windows.Forms.Padding(1);
+            this.userControlHome1.Location = new System.Drawing.Point(229, 21);
+            this.userControlHome1.Margin = new System.Windows.Forms.Padding(2);
             this.userControlHome1.Name = "userControlHome1";
-            this.userControlHome1.Size = new System.Drawing.Size(1035, 658);
-            this.userControlHome1.TabIndex = 7;
+            this.userControlHome1.Size = new System.Drawing.Size(924, 640);
+            this.userControlHome1.TabIndex = 46;
             // 
             // userControlConnections1
             // 
-            this.userControlConnections1.Location = new System.Drawing.Point(242, 21);
-            this.userControlConnections1.Margin = new System.Windows.Forms.Padding(1);
+            this.userControlConnections1.Location = new System.Drawing.Point(229, 21);
+            this.userControlConnections1.Margin = new System.Windows.Forms.Padding(2);
             this.userControlConnections1.Name = "userControlConnections1";
-            this.userControlConnections1.Size = new System.Drawing.Size(1035, 658);
-            this.userControlConnections1.TabIndex = 6;
+            this.userControlConnections1.Size = new System.Drawing.Size(924, 640);
+            this.userControlConnections1.TabIndex = 45;
             // 
             // userControlOptions1
             // 
-            this.userControlOptions1.Location = new System.Drawing.Point(242, 21);
-            this.userControlOptions1.Margin = new System.Windows.Forms.Padding(1);
+            this.userControlOptions1.Location = new System.Drawing.Point(229, 21);
+            this.userControlOptions1.Margin = new System.Windows.Forms.Padding(2);
             this.userControlOptions1.Name = "userControlOptions1";
-            this.userControlOptions1.Size = new System.Drawing.Size(1035, 658);
-            this.userControlOptions1.TabIndex = 5;
+            this.userControlOptions1.Size = new System.Drawing.Size(924, 640);
+            this.userControlOptions1.TabIndex = 44;
             // 
             // userControlLog1
             // 
-            this.userControlLog1.Location = new System.Drawing.Point(242, 21);
-            this.userControlLog1.Margin = new System.Windows.Forms.Padding(1);
+            this.userControlLog1.Location = new System.Drawing.Point(229, 21);
+            this.userControlLog1.Margin = new System.Windows.Forms.Padding(2);
             this.userControlLog1.Name = "userControlLog1";
-            this.userControlLog1.Size = new System.Drawing.Size(1035, 658);
-            this.userControlLog1.TabIndex = 4;
+            this.userControlLog1.Size = new System.Drawing.Size(924, 640);
+            this.userControlLog1.TabIndex = 43;
             // 
             // userControlInfo1
             // 
-            this.userControlInfo1.Location = new System.Drawing.Point(242, 21);
-            this.userControlInfo1.Margin = new System.Windows.Forms.Padding(1);
+            this.userControlInfo1.Location = new System.Drawing.Point(229, 21);
+            this.userControlInfo1.Margin = new System.Windows.Forms.Padding(2);
             this.userControlInfo1.Name = "userControlInfo1";
-            this.userControlInfo1.Size = new System.Drawing.Size(1035, 658);
-            this.userControlInfo1.TabIndex = 3;
+            this.userControlInfo1.Size = new System.Drawing.Size(924, 640);
+            this.userControlInfo1.TabIndex = 42;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1277, 708);
-            this.Controls.Add(this.progressBar1);
-            this.Controls.Add(this.labelProgressPercent);
+            this.ClientSize = new System.Drawing.Size(1153, 688);
             this.Controls.Add(this.userControlHome1);
             this.Controls.Add(this.userControlConnections1);
             this.Controls.Add(this.userControlOptions1);
             this.Controls.Add(this.userControlLog1);
+            this.Controls.Add(this.userControlInfo1);
+            this.Controls.Add(this.progressBar1);
+            this.Controls.Add(this.labelProgressPercent);
             this.Controls.Add(this.panelTitleBar);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.userControlInfo1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
@@ -345,19 +346,19 @@
         private System.Windows.Forms.Button buttonConnections;
         private System.Windows.Forms.Button buttonHome;
         private System.Windows.Forms.Panel panelTitleBar;
-        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button buttonMinimize;
         private System.Windows.Forms.Button buttonCloseForm;
         private System.Windows.Forms.Panel panelIndicator;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelProgressPercent;
+        private System.Windows.Forms.ProgressBar progressBar1;
         private UserControlInfo userControlInfo1;
         private UserControlLog userControlLog1;
         private UserControlOptions userControlOptions1;
         private UserControlConnections userControlConnections1;
         private UserControlHome userControlHome1;
-        private System.Windows.Forms.Label labelProgressPercent;
-        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }
 

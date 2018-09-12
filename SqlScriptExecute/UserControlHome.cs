@@ -46,7 +46,11 @@ namespace SQLScriptExecute
             buttonCancel.DataBindings.Add("Enabled", OptionData.Instance, "CancelButtonEnabled", true, DataSourceUpdateMode.OnPropertyChanged);
             buttonBrowse.DataBindings.Add("Enabled", OptionData.Instance, "RunButtonEnabled", true, DataSourceUpdateMode.OnPropertyChanged);
             buttonTest.DataBindings.Add("Enabled", OptionData.Instance, "RunButtonEnabled", true, DataSourceUpdateMode.OnPropertyChanged);
-            checkBoxProcessErrorFile.DataBindings.Add("Checked", OptionData.Instance, "ProcessErrorFiles", true, DataSourceUpdateMode.OnPropertyChanged);
+            checkBoxProcessErrorFile.DataBindings.Add("Checked", OptionData.Instance, "ProcessErrorFiles", true, DataSourceUpdateMode.OnPropertyChanged);            
+            pictureBoxSpinner.DataBindings.Add("Visible", OptionData.Instance, "WorkerIsBusy", true, DataSourceUpdateMode.OnPropertyChanged);
+
+            this.pictureBoxSpinner.Image = Properties.Resources.spinner_32;
+            //this.pictureBoxSpinner.Visible = false;
         }
 
 

@@ -24,7 +24,7 @@ namespace SQLScriptExecute
 
             //Start form on Home
             changeButtonBackcolor(buttonHome);
-            userControlHome1.BringToFront();
+            //userControlHome1.BringToFront();
 
             if (Environment.OSVersion.Version.Major >= 6) SetProcessDPIAware();
 
@@ -35,15 +35,7 @@ namespace SQLScriptExecute
             //TODO: Change Font Style and Size
             //TODO: Change Form Size
             //TODO: Excel layout??
-        }
-
-        /*-----------------------------------------------------
-        Button Close Clicked
-        -----------------------------------------------------*/
-        private void buttonCloseForm_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
+        }        
 
         /*-----------------------------------------------------
         Title Bar (Panel) Click and move form
@@ -118,5 +110,20 @@ namespace SQLScriptExecute
             changeButtonBackcolor((Button)sender);
         }
 
+        /*-----------------------------------------------------
+        Button Minimize Clicked
+        -----------------------------------------------------*/
+        private void buttonMinimize_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        /*-----------------------------------------------------
+        Button Close Clicked
+        -----------------------------------------------------*/
+        private void buttonCloseForm_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }

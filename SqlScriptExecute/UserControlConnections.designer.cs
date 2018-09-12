@@ -46,7 +46,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(188, 199);
+            this.label4.Location = new System.Drawing.Point(162, 204);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(73, 20);
@@ -56,8 +56,8 @@
             // textBoxPassword
             // 
             this.textBoxPassword.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxPassword.Location = new System.Drawing.Point(273, 196);
-            this.textBoxPassword.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBoxPassword.Location = new System.Drawing.Point(247, 201);
+            this.textBoxPassword.Margin = new System.Windows.Forms.Padding(2);
             this.textBoxPassword.Name = "textBoxPassword";
             this.textBoxPassword.PasswordChar = '*';
             this.textBoxPassword.Size = new System.Drawing.Size(167, 27);
@@ -67,7 +67,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(188, 168);
+            this.label3.Location = new System.Drawing.Point(162, 173);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(85, 20);
@@ -77,8 +77,8 @@
             // textBoxUserName
             // 
             this.textBoxUserName.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxUserName.Location = new System.Drawing.Point(273, 165);
-            this.textBoxUserName.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBoxUserName.Location = new System.Drawing.Point(247, 170);
+            this.textBoxUserName.Margin = new System.Windows.Forms.Padding(2);
             this.textBoxUserName.Name = "textBoxUserName";
             this.textBoxUserName.Size = new System.Drawing.Size(167, 27);
             this.textBoxUserName.TabIndex = 12;
@@ -87,8 +87,8 @@
             // 
             this.checkBoxWindowsAuthentication.AutoSize = true;
             this.checkBoxWindowsAuthentication.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxWindowsAuthentication.Location = new System.Drawing.Point(192, 138);
-            this.checkBoxWindowsAuthentication.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.checkBoxWindowsAuthentication.Location = new System.Drawing.Point(166, 143);
+            this.checkBoxWindowsAuthentication.Margin = new System.Windows.Forms.Padding(2);
             this.checkBoxWindowsAuthentication.Name = "checkBoxWindowsAuthentication";
             this.checkBoxWindowsAuthentication.Size = new System.Drawing.Size(190, 24);
             this.checkBoxWindowsAuthentication.TabIndex = 11;
@@ -100,7 +100,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(188, 316);
+            this.label2.Location = new System.Drawing.Point(162, 321);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(130, 20);
@@ -110,8 +110,8 @@
             // textBoxConnectionString
             // 
             this.textBoxConnectionString.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxConnectionString.Location = new System.Drawing.Point(192, 343);
-            this.textBoxConnectionString.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBoxConnectionString.Location = new System.Drawing.Point(166, 348);
+            this.textBoxConnectionString.Margin = new System.Windows.Forms.Padding(2);
             this.textBoxConnectionString.Multiline = true;
             this.textBoxConnectionString.Name = "textBoxConnectionString";
             this.textBoxConnectionString.ReadOnly = true;
@@ -121,8 +121,8 @@
             // buttonAddServer
             // 
             this.buttonAddServer.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonAddServer.Location = new System.Drawing.Point(572, 279);
-            this.buttonAddServer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonAddServer.Location = new System.Drawing.Point(546, 284);
+            this.buttonAddServer.Margin = new System.Windows.Forms.Padding(2);
             this.buttonAddServer.Name = "buttonAddServer";
             this.buttonAddServer.Size = new System.Drawing.Size(97, 36);
             this.buttonAddServer.TabIndex = 16;
@@ -135,8 +135,8 @@
             this.listBox1.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 17;
-            this.listBox1.Location = new System.Drawing.Point(544, 151);
-            this.listBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.listBox1.Location = new System.Drawing.Point(518, 156);
+            this.listBox1.Margin = new System.Windows.Forms.Padding(2);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(252, 123);
             this.listBox1.TabIndex = 17;
@@ -144,8 +144,8 @@
             // buttonRemoveServer
             // 
             this.buttonRemoveServer.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonRemoveServer.Location = new System.Drawing.Point(676, 279);
-            this.buttonRemoveServer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonRemoveServer.Location = new System.Drawing.Point(650, 284);
+            this.buttonRemoveServer.Margin = new System.Windows.Forms.Padding(2);
             this.buttonRemoveServer.Name = "buttonRemoveServer";
             this.buttonRemoveServer.Size = new System.Drawing.Size(97, 36);
             this.buttonRemoveServer.TabIndex = 18;
@@ -157,7 +157,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(541, 129);
+            this.label1.Location = new System.Drawing.Point(515, 134);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(59, 20);
@@ -168,7 +168,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(378, 433);
+            this.label5.Location = new System.Drawing.Point(352, 438);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(250, 19);
             this.label5.TabIndex = 21;
@@ -190,9 +190,9 @@
             this.Controls.Add(this.checkBoxWindowsAuthentication);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBoxConnectionString);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "UserControlConnections";
-            this.Size = new System.Drawing.Size(1035, 658);
+            this.Size = new System.Drawing.Size(924, 640);
             this.Load += new System.EventHandler(this.UserControlConnections_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
