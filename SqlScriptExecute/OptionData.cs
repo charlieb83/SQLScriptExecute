@@ -65,22 +65,28 @@ namespace SQLScriptExecute
         private int _stopAfterErrorCount = Properties.Settings.Default.StopAfterErrorCount;
         private bool _consecutiveErrors = Properties.Settings.Default.ConsecutiveErrors;
         private bool _workerIsBusy = false;
-        private bool _runButtonEnabled = true;
-        private bool _cancelButtonEnabled = false;
+        //private bool _runButtonEnabled = true;
+       // private bool _cancelButtonEnabled = false;
+
+        private bool _disableWhenRunning = true;    //Run button, etc.
+        private bool _enableWhenRunning = false;   //Cancel button, etc.
+
         private bool _useDefaultLogPath = Properties.Settings.Default.UseDefaultLogPath;
         private string _logPath = Properties.Settings.Default.LogPath;
         private string _scriptsToExecutePath = Properties.Settings.Default.ScriptsToExecutePath;
-        private string _ProgressPercentText = "0%";
+        private string _progressPercentText = "0%";
         private int _progressBarValue = 0;
-        private string _textBoxStatusLog { get; set; } = "";
+        private string _realTimeStatus { get; set; } = "";
         private bool _processErrorFiles = Properties.Settings.Default.ProcessErrorFiles;
 
         //public List<string> Servers { get; set; }        
         public int FileTotalCount { get; set; } = 0;
         public int FileSuccessfullUpdateCount { get; set; } = 0;
-        public int FilesErrorCount { get; set; } = 0;
-        public List<string> ErrorListFileNames { get; set; }
+        public int FileErrorCount { get; set; } = 0;
+        public List<string> ErrorFileNameList { get; set; }
         public string LogFileName { get; set; } = "";
+        public int CurrentRecordCount { get; set; } = 0;
+        public DateTime ProcessStartTime { get; set; } = DateTime.Now;
 
         //Excel FileName (Set from LogFileName)
         public string ExcelFileName
@@ -184,25 +190,25 @@ namespace SQLScriptExecute
         }
 
         //Run Button Enable        
-        public bool RunButtonEnabled
+        public bool DisableWhenRunning
         {
-            get { return _runButtonEnabled; }
+            get { return _disableWhenRunning; }
 
             set
             {
-                _runButtonEnabled = value;
+                _disableWhenRunning = value;
                 NotifyPropertyChanged();    //Triggers Property Changed Notifier
             }
         }
 
         //Cancel Button Enable        
-        public bool CancelButtonEnabled
+        public bool EnableWhenRunning
         {
-            get { return _cancelButtonEnabled; }
+            get { return _enableWhenRunning; }
 
             set
             {
-                _cancelButtonEnabled = value;
+                _enableWhenRunning = value;
                 NotifyPropertyChanged();    //Triggers Property Changed Notifier
             }
         }
@@ -338,23 +344,24 @@ namespace SQLScriptExecute
         //ProgressBar Percent Text        
         public string ProgressPercentText
         {
-            get { return _progressBarValue.ToString() + "%"; }
-
+            get { return _progressPercentText + "%"; }
+            //get { return _progressBarValue.ToString() + "%"; }
+            //od.FileTotalCount / currentRecordCount;
             set
             {
-                _ProgressPercentText = value;
+                _progressPercentText = value;
                 NotifyPropertyChanged();    //Triggers Property Changed Notifier
             }
         }
 
-        //TextBoxStatusLog
-        public string TextBoxStatusLog
+        //RealTimeStatus
+        public string RealTimeStatus
         {
-            get { return _textBoxStatusLog; }
+            get { return _realTimeStatus; }
 
             set
             {
-                _textBoxStatusLog = value;
+                _realTimeStatus = value;
                 NotifyPropertyChanged();    //Triggers Property Changed Notifier
             }
         }
@@ -392,7 +399,7 @@ namespace SQLScriptExecute
                     FileTotalCount = Directory.GetFiles(ScriptsToExecutePath, fileFilter, option).Length;
                     //Reset other counters
                     FileSuccessfullUpdateCount = 0;
-                    FilesErrorCount = 0;
+                    FileErrorCount = 0;
                 }
                 catch //(Exception ex)
                 {
@@ -413,7 +420,7 @@ namespace SQLScriptExecute
                     FileTotalCount = validItems.Count();
                     //Reset other counters
                     FileSuccessfullUpdateCount = 0;
-                    FilesErrorCount = 0;
+                    FileErrorCount = 0;
                 }
                 catch //(Exception ex)
                 {
@@ -540,7 +547,7 @@ namespace SQLScriptExecute
             this.ConsecutiveErrors = Properties.Settings.Default.ConsecutiveErrors;
             this.ProcessErrorFiles = Properties.Settings.Default.ProcessErrorFiles;
             SetScriptCount();
-            this.ErrorListFileNames = new List<string>();
+            this.ErrorFileNameList = new List<string>();
             BuildLogFileName();
         }
 

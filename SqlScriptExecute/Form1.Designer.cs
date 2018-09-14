@@ -267,6 +267,7 @@
             this.progressBar1.Location = new System.Drawing.Point(229, 662);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(876, 23);
+            this.progressBar1.Step = 1;
             this.progressBar1.TabIndex = 40;
             // 
             // userControlHome1

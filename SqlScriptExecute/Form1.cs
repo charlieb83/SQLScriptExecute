@@ -28,13 +28,16 @@ namespace SQLScriptExecute
 
             if (Environment.OSVersion.Version.Major >= 6) SetProcessDPIAware();
 
+            //Binds WinForms Objects to Class Properties
             progressBar1.DataBindings.Add("Value", OptionData.Instance, "ProgressBarValue", true, DataSourceUpdateMode.OnPropertyChanged);
+            progressBar1.DataBindings.Add("Maximum", OptionData.Instance, "FileTotalCount", true, DataSourceUpdateMode.OnPropertyChanged);
             labelProgressPercent.DataBindings.Add("Text", OptionData.Instance, "ProgressPercentText", true, DataSourceUpdateMode.OnPropertyChanged);
 
-            //TODO: Set visibility of Progress bar
-            //TODO: Change Font Style and Size
-            //TODO: Change Form Size
-            //TODO: Excel layout??
+            buttonHome.DataBindings.Add("Enabled", OptionData.Instance, "DisableWhenRunning", true, DataSourceUpdateMode.OnPropertyChanged);
+            buttonConnections.DataBindings.Add("Enabled", OptionData.Instance, "DisableWhenRunning", true, DataSourceUpdateMode.OnPropertyChanged);
+            buttonOptions.DataBindings.Add("Enabled", OptionData.Instance, "DisableWhenRunning", true, DataSourceUpdateMode.OnPropertyChanged);
+            buttonLog.DataBindings.Add("Enabled", OptionData.Instance, "DisableWhenRunning", true, DataSourceUpdateMode.OnPropertyChanged);
+            buttonInfo.DataBindings.Add("Enabled", OptionData.Instance, "DisableWhenRunning", true, DataSourceUpdateMode.OnPropertyChanged);
         }        
 
         /*-----------------------------------------------------
@@ -123,6 +126,11 @@ namespace SQLScriptExecute
         -----------------------------------------------------*/
         private void buttonCloseForm_Click(object sender, EventArgs e)
         {
+            if (OptionData.Instance.WorkerIsBusy == true)
+            {
+                MessageBox.Show("Process is currently running. Please cancel before exiting.", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
             Application.Exit();
         }
     }

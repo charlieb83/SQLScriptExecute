@@ -40,12 +40,12 @@ namespace SQLScriptExecute
             labelStopAfterErrorCount.DataBindings.Add("Text", OptionData.Instance, "StopAfterErrorCount", true, DataSourceUpdateMode.OnPropertyChanged);
             labelScriptsInQueueCount.DataBindings.Add("Text", OptionData.Instance, "FileTotalCount", true, DataSourceUpdateMode.OnPropertyChanged);
             labelScriptsUpdatedCount.DataBindings.Add("Text", OptionData.Instance, "FileSuccessfullUpdateCount", true, DataSourceUpdateMode.OnPropertyChanged);
-            labelScriptErrorCount.DataBindings.Add("Text", OptionData.Instance, "FilesErrorCount", true, DataSourceUpdateMode.OnPropertyChanged);
-            textBoxStatus.DataBindings.Add("Text", OptionData.Instance, "TextBoxStatusLog", true, DataSourceUpdateMode.OnPropertyChanged);            
-            buttonRun.DataBindings.Add("Enabled", OptionData.Instance, "RunButtonEnabled", true, DataSourceUpdateMode.OnPropertyChanged);
-            buttonCancel.DataBindings.Add("Enabled", OptionData.Instance, "CancelButtonEnabled", true, DataSourceUpdateMode.OnPropertyChanged);
-            buttonBrowse.DataBindings.Add("Enabled", OptionData.Instance, "RunButtonEnabled", true, DataSourceUpdateMode.OnPropertyChanged);
-            buttonTest.DataBindings.Add("Enabled", OptionData.Instance, "RunButtonEnabled", true, DataSourceUpdateMode.OnPropertyChanged);
+            labelScriptErrorCount.DataBindings.Add("Text", OptionData.Instance, "FileErrorCount", true, DataSourceUpdateMode.OnPropertyChanged);
+            textBoxStatus.DataBindings.Add("Text", OptionData.Instance, "RealTimeStatus", true, DataSourceUpdateMode.OnPropertyChanged);               
+            buttonRun.DataBindings.Add("Enabled", OptionData.Instance, "DisableWhenRunning", true, DataSourceUpdateMode.OnPropertyChanged);
+            buttonCancel.DataBindings.Add("Enabled", OptionData.Instance, "EnableWhenRunning", true, DataSourceUpdateMode.OnPropertyChanged);
+            buttonBrowse.DataBindings.Add("Enabled", OptionData.Instance, "DisableWhenRunning", true, DataSourceUpdateMode.OnPropertyChanged);
+            buttonTest.DataBindings.Add("Enabled", OptionData.Instance, "DisableWhenRunning", true, DataSourceUpdateMode.OnPropertyChanged);
             checkBoxProcessErrorFile.DataBindings.Add("Checked", OptionData.Instance, "ProcessErrorFiles", true, DataSourceUpdateMode.OnPropertyChanged);            
             pictureBoxSpinner.DataBindings.Add("Visible", OptionData.Instance, "WorkerIsBusy", true, DataSourceUpdateMode.OnPropertyChanged);
 
@@ -70,7 +70,7 @@ namespace SQLScriptExecute
                     return;
                 }
             }
-            hp.ExecuteScripts();
+            hp.ExecuteProcess();
         }
 
         /*-----------------------------------------------------

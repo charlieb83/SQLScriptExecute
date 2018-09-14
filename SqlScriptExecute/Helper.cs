@@ -24,8 +24,9 @@ namespace SQLScriptExecute
     {
         BackgroundWorker backgroundWorker1;
         DataTable excelDataTable = new DataTable();
-       
-        
+
+        enum UpdateResult { Fail = 0, Success = 1 };
+
         OptionData od = OptionData.Instance;
 
         //Constructor
@@ -40,7 +41,12 @@ namespace SQLScriptExecute
             excelDataTable.Columns.Add("Message");
 
             // Create background worker thread
-            backgroundWorker1 = new BackgroundWorker();
+            //backgroundWorker1 = new BackgroundWorker();
+            backgroundWorker1 = new BackgroundWorker
+            {
+                WorkerReportsProgress = true,
+                WorkerSupportsCancellation = true
+            };
             backgroundWorker1.DoWork += new DoWorkEventHandler(backgroundWorker1_DoWork);
             backgroundWorker1.ProgressChanged += new ProgressChangedEventHandler(backgroundWorker1_ProgressChanged);
             backgroundWorker1.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorker1_RunWorkerCompleted);
@@ -139,15 +145,27 @@ namespace SQLScriptExecute
             
         }
 
+        /*-----------------------------------------------------
+        Reset Run Status
+        -----------------------------------------------------*/
+        private void ResetRuntimeStats()
+        {
+            //Reset Stats
+            od.FileSuccessfullUpdateCount = 0;
+            od.FileErrorCount = 0;
+            od.ProgressBarValue = 0;
+            od.CurrentRecordCount = 0;
+        }
+
 
         /*-----------------------------------------------------
         Run Scripts
         -----------------------------------------------------*/
-        public void ExecuteScripts()
+        public void ExecuteProcess()
         {
             string errorMessage = "";
             ResetRuntimeStats();
-            od.TextBoxStatusLog = "";
+            od.RealTimeStatus = "";     //TODO:Use function
             excelDataTable.Clear();
 
             //Don't run if not valid
@@ -200,206 +218,200 @@ namespace SQLScriptExecute
                 return;
             }
             //All good...
-            od.ErrorListFileNames.Clear();
-            od.CancelButtonEnabled = true;
-            od.RunButtonEnabled = false;            
+            od.ErrorFileNameList.Clear();
+            od.EnableWhenRunning = true;
+            od.DisableWhenRunning = false;            
         }
 
-
-        /*-----------------------------------------------------
-        Reset Run Status
-        -----------------------------------------------------*/
-        private void ResetRuntimeStats()
-        {
-            //Reset Stats
-            od.FileSuccessfullUpdateCount = 0;
-            od.FilesErrorCount = 0;
-            od.ProgressBarValue = 0;
-        }
-
-
+        
         /*-----------------------------------------------------
         BackgroundWorker DoWork - Main Thread
         -----------------------------------------------------*/
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             od.WorkerIsBusy = true;
-            DateTime startTime = DateTime.Now;
+            od.ProcessStartTime = DateTime.Now;
             
             string fileFilter = "*.sql";
             string sqlScriptFile;
             string scriptsPath = "";
             string serverConnection = "";
-            int scriptsUpdated = 0;
-            int errorCount = 0;
-            int currentCount = 0;
             int consecutiveErrorCount = 0;
             string exceptionMessage = "";
-            string status = "";
+            bool updateSuccessful = false;
             string fileName = "";
 
             //LogFile - Append timestamp to FileName
-            od.LogFileName += "_" + startTime.ToString("yyyyMMddHHmmss"); 
-            StringBuilder errorMessages = new StringBuilder();
+            od.LogFileName += "_" + od.ProcessStartTime.ToString("yyyyMMddHHmmss"); 
 
             //Search Option
             SearchOption option = od.IncludeSubFolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
-            //Set vals from data class
+            //Set vals from data class            
             serverConnection = od.SelectedServer;
             scriptsPath = od.ScriptsToExecutePath;
-            string sqlConnectionString = od.ConnectionString;                    
+            string sqlConnectionString = od.ConnectionString;
 
-            //TODO: add max progress to class (currently hardcoded to 100)
-            int step = 100 / od.FileTotalCount;
-            //int step = circularProgressBar1.Maximum / totalScriptCount;
-            
-            //LogFile StreamWriter
-            using (StreamWriter w = File.CreateText(od.LogPath + @"\" + od.LogFileName + @".log"))
+            //Log Header
+            WriteToTextLog(GetLogHeader(), false);
+
+            using (SqlConnection connection = new SqlConnection(sqlConnectionString))
             {
-                //Log Header
-                Log(GetLogHeader(), w, false);
+                Server server = new Server(new ServerConnection(connection));
 
-                using (SqlConnection connection = new SqlConnection(sqlConnectionString))
+                //Determine if processing error file or enumerating folders for .sql files
+                IEnumerable<string> validItems = Enumerable.Empty<string>();
+                if (od.ProcessErrorFiles == true)
                 {
-                    Server server = new Server(new ServerConnection(connection));
-                    //SqlTransaction sqlTransaction = connection.BeginTransaction();  //Use Transactions...future maybe?
+                    //When processing error file get list of files from within the file
+                    var tempList = File.ReadAllLines(od.ScriptsToExecutePath);
+                    validItems = new List<string>(tempList).Skip(1); //Skip Header Record
+                }
+                else
+                {
+                    //Enumerate directory
+                    validItems = Directory.EnumerateFiles(scriptsPath, fileFilter, option).OrderBy(f => f);
+                }
 
-                    //Determine if processing error file or enumerating folders for .sql files
-                    IEnumerable<string> validItems = Enumerable.Empty<string>();
-                    if (od.ProcessErrorFiles == true)
+                //Loop through folders and files order by name
+                //foreach (string file in Directory.EnumerateFiles(scriptsPath, fileFilter, option).OrderBy(f => f))
+                foreach (string file in validItems)
+                {
+                    od.CurrentRecordCount += 1;
+                    sqlScriptFile = File.ReadAllText(file);
+
+                    fileName =  Path.GetFileName(file);
+                    AppendTextBoxStatusWithTimeStamp(fileName); //Writes Only FileName
+                    //AppendTextBoxStatusWithTimeStamp(file); //Writes whole path
+
+                    exceptionMessage = "";
+                    updateSuccessful = false;
+
+                    try
                     {
-                        //When processing error file get list of files from within the file
-                        var tempList = File.ReadAllLines(od.ScriptsToExecutePath);
-                        validItems = new List<string>(tempList).Skip(1); //Skip Header Record
+                        server.ConnectionContext.ExecuteNonQuery(sqlScriptFile);    //Execute Script
+
+                        AppendTextBoxStatus("  -- Complete" + "\r\n");
+                        od.FileSuccessfullUpdateCount += 1;
+                        consecutiveErrorCount = 0;  //Reset Consecutive Error count
+                        updateSuccessful = true;
                     }
-                    else
+
+                    catch (Exception ex)
                     {
-                        //Enumerate directory
-                        validItems = Directory.EnumerateFiles(scriptsPath, fileFilter, option).OrderBy(f => f);
+                        exceptionMessage = ex.InnerException.Message.ToString();                            
+                        exceptionMessage = exceptionMessage.Replace(System.Environment.NewLine, "-");   //Remove line feeds from error messages - ???
+                        AppendTextBoxStatus("  -- Error: " + exceptionMessage + "\r\n");
+
+                        od.FileErrorCount += 1;
+                        consecutiveErrorCount++;
+                        updateSuccessful = false;
                     }
 
-                    //Loop through folders and files order by name
-                    //foreach (string file in Directory.EnumerateFiles(scriptsPath, fileFilter, option).OrderBy(f => f))
-                    foreach (string file in validItems)
+                    //Compile values into an Array (currentRecordCount, ScriptsUpdated, ErrorCount)
+                    //string[] arr1 = new string[] {od.CurrentRecordCount.ToString(), scriptsUpdated.ToString(), errorCount.ToString() };                        
+                    backgroundWorker1.ReportProgress(0);
+
+                    //Log
+                    LogWrapper(file, updateSuccessful, exceptionMessage);
+
+                    //Stop Process if Max Errors Hit
+                    if (StopProcessBecauseOfErrorCount(consecutiveErrorCount) == true)
                     {
-                        currentCount++;
-                        sqlScriptFile = File.ReadAllText(file);
+                        AppendTextBoxStatus("Max Consecutive Errors of " + od.StopAfterErrorCount.ToString() + " has been reached.....Canceling...." + "\r\n");
+                        e.Cancel = true;
+                        break;
+                    }
 
-                        fileName =  Path.GetFileName(file);
-                        AppendTextBoxStatusWithTimeStamp(fileName); //Writes whole path
-                        //AppendTextBoxStatusWithTimeStamp(file); //Writes whole path
-
-                        exceptionMessage = "";
-
-                        try
-                        {
-                            server.ConnectionContext.ExecuteNonQuery(sqlScriptFile);    //Execute Script
-
-                            AppendTextBoxStatus("  -- Complete" + "\r\n");
-                            scriptsUpdated++;
-                            consecutiveErrorCount = 0;  //Reset Consecutive Error count
-
-                            //Log Success if LogErrorsOnly is false
-                            if (od.LogErrorsOnly == false)
-                            {
-                                Log(file + "  -- Successful", w, true);
-                            }
-                        }
-
-                        catch (Exception ex)
-                        {
-                            //Console.WriteLine(ex.InnerException.Message.ToString());
-                            //Console.WriteLine(ex.GetBaseException().InnerException.ToString() );
-                            //Console.WriteLine("Error: " + ex.GetBaseException().Message);
-
-                            exceptionMessage = ex.InnerException.Message.ToString();
-                            //Remove line feeds from error messages - ???
-                            exceptionMessage = exceptionMessage.Replace(System.Environment.NewLine, "-");
-
-                            AppendTextBoxStatus("  -- Error: " + exceptionMessage + "\r\n");
-
-                            errorCount++;
-                            consecutiveErrorCount++;
-
-                            //Log Error
-                            Log(file + "-- Error: " + exceptionMessage, w, true);
-                            //Add Error FileName to ErrorList
-                            od.ErrorListFileNames.Add(file);
-                        }
-
-                        //Compile values into an Array (ProgressStepValue, ScriptsUpdated, ErrorCount)
-                        string[] arr1 = new string[] { step.ToString(), scriptsUpdated.ToString(), errorCount.ToString() };
-
-                        backgroundWorker1.ReportProgress(0, arr1);
-                        //backgroundWorker1.ReportProgress(step);   //orig
-
-                        //Add to Datatable if Create Excel Log is True
-                        if (od.CreateExcelLog == true)
-                        {
-                            if (string.IsNullOrWhiteSpace(exceptionMessage))
-                            {
-                                exceptionMessage = "Success";
-                                status = "S";       //TODO: Enums???
-                            }
-                            else
-                            {
-                                status = "E";
-                            }
-                            //Only Log Errors if Log Errors Only = true
-                            if (status == "E" || od.LogErrorsOnly == false)
-                            {
-                                PopulateDataTable(od.SelectedServer, file, status, DateTime.Now.ToString("yyyyMMddHHmmss"), exceptionMessage);
-                            }
-                        }
-
-                        //If Stop after xx Errors is set, check here and cancel 
-                        if (od.ExecuteScriptsUntilFinished == false)
-                        {
-                            if (od.ConsecutiveErrors == true)
-                            {
-                                if (consecutiveErrorCount >= od.StopAfterErrorCount)
-                                {
-                                    AppendTextBoxStatus("Max Consecutive Errors of " + od.StopAfterErrorCount.ToString() + " has been reached.....Canceling" + "\r\n");
-                                    e.Cancel = true;
-                                    break;
-                                }
-                            }
-                            else if (errorCount >= od.StopAfterErrorCount)
-                            {
-                                AppendTextBoxStatus("Max Errors of " + od.StopAfterErrorCount.ToString() + " has been reached.....Canceling" + "\r\n");
-                                e.Cancel = true;
-                                break;
-                            }
-                        }
-
-                        if (backgroundWorker1.CancellationPending)
-                        {
-                            // Set the e.Cancel flag so that the WorkerCompleted event
-                            // knows that the process was Canceled.
-                            e.Cancel = true;
-                            AppendTextBoxStatusWithTimeStamp("User Canceled...");                            
-                            //backgroundWorker1.ReportProgress(0);
-                            return;
-                        }
+                    //User Canceled
+                    if (backgroundWorker1.CancellationPending)
+                    {
+                        // Set the e.Cancel flag so the WorkerCompleted event knows the process was Canceled
+                        e.Cancel = true;
+                        AppendTextBoxStatusWithTimeStamp("User Canceled...");
+                        return;
                     }
                 }
-                //Finished
-                //totalRuntime = startTime;
-                TimeSpan span = (DateTime.Now - startTime);
-                AppendTextBoxStatus("Execution Complete--" + "\r\n");
-                AppendTextBoxStatus("----------Total Runtime: " + String.Format("{0} minutes, {1} seconds", span.Minutes, span.Seconds) + "\r\n");
-                AppendTextBoxStatus("----------Total Scripts In Queue: " + od.FileTotalCount.ToString() + "    Total Scripts Run: " + currentCount.ToString() + "    Total Errors: " + errorCount.ToString() + "\r\n");
-                //Log
-                Log(GetLogFooter(od.FileTotalCount, scriptsUpdated, errorCount), w, false);
-                if (od.CreateExcelLog == true)
-                {
-                    //Create Excel LOG
-                    CreateExcelLog();
-                }
-                //This is a file of just the error scripts.  Use incase you want to just execute these in a 2nd run
-                WriteErrorFile(startTime, od.FileTotalCount, errorCount);
             }
+        }
+
+
+        /*-----------------------------------------------------
+        Log Wrapper
+        -----------------------------------------------------*/
+        private void LogWrapper(string file, bool updateSuccessful, string exceptionMessage)
+        {
+            string result = "";
+            string logMessage = "";
+            
+            //General Log message
+            if (updateSuccessful == true)
+            {
+                //Successful
+                result = "S";
+                logMessage = file + "  -- Successful" + System.Environment.NewLine;
+            }                               
+            else
+            {
+                //Error
+                result = "E";
+                logMessage = file + "-- Error: " + exceptionMessage + System.Environment.NewLine;
+            }
+
+            //----Log File----
+            //Only Log Errors if Log Errors Only = true
+            if (updateSuccessful == false || od.LogErrorsOnly == false)
+            {
+                WriteToTextLog(logMessage, true);
+            }
+
+            //Add FilePath to ErrorList
+            if (updateSuccessful == false)
+            {
+                od.ErrorFileNameList.Add(file);
+            }
+
+            //----Excel File----
+            //Add to Datatable if Create Excel Log is True
+            if (od.CreateExcelLog == true)
+            {
+                if (updateSuccessful == true)
+                {
+                    exceptionMessage = "Success";
+                }
+                //Only Log Errors if Log Errors Only = true
+                if (updateSuccessful == false || od.LogErrorsOnly == false)
+                {
+                    PopulateDataTable(od.SelectedServer, file, result, DateTime.Now.ToString("yyyyMMddHHmmss"), exceptionMessage);
+                }
+            }
+        }
+
+
+        /*-----------------------------------------------------
+        This determines if the process should keep running based on Error counts
+        -----------------------------------------------------*/
+        private bool StopProcessBecauseOfErrorCount(int consecutiveErrorCount)
+        {
+            bool retVal = false;
+
+            //If Stop after xx Errors is set, check here and cancel 
+            if (od.ExecuteScriptsUntilFinished == false)
+            {
+                if (od.ConsecutiveErrors == true)
+                {
+                    if (consecutiveErrorCount >= od.StopAfterErrorCount)
+                    {
+                        retVal = true;
+                    }
+                }
+                else if (od.FileErrorCount >= od.StopAfterErrorCount)
+                {
+                    retVal = true;
+                }
+            }
+
+            return retVal;
         }
 
         /*-----------------------------------------------------
@@ -407,15 +419,19 @@ namespace SQLScriptExecute
         -----------------------------------------------------*/
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            string[] runStats = (string[])e.UserState;
-            //Console.WriteLine(runStats[0].ToString());  //ProgressBar Step
+            //string[] runStats = (string[])e.UserState;
+            //Console.WriteLine(runStats[0].ToString());  //currentRecordCount
             //Console.WriteLine(runStats[1].ToString());  //scriptsUpdated
             //Console.WriteLine(runStats[2].ToString());  //errorCount
-            int progressStep = Int32.Parse(runStats[0]);
+            //int progressStep = Int32.Parse(runStats[0]);
 
-            od.FileSuccessfullUpdateCount = Int32.Parse(runStats[1]);
-            od.FilesErrorCount = Int32.Parse(runStats[2]);
-            od.ProgressBarValue += progressStep;
+            //double progressPercent = (double.Parse(runStats[0]) / Convert.ToDouble(od.FileTotalCount)) * 100;
+            double progressPercent = (Convert.ToDouble(od.CurrentRecordCount) / Convert.ToDouble(od.FileTotalCount)) * 100;
+            od.ProgressPercentText = Convert.ToInt32(progressPercent).ToString();
+
+            //od.FileSuccessfullUpdateCount = Int32.Parse(runStats[1]);
+            //od.FilesErrorCount = Int32.Parse(runStats[2]);
+            od.ProgressBarValue += 1;  //The step value is always going to be 1     //+= progressStep;
         }
 
         /*-----------------------------------------------------
@@ -423,11 +439,29 @@ namespace SQLScriptExecute
         -----------------------------------------------------*/
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            od.ProgressBarValue = 100;
+            od.ProgressBarValue = od.FileTotalCount;    //TODO: Create ProgressBar Max value...set to FileCount in class
+            od.ProgressPercentText = "100";             //Do this for when worker is canceled
             //MessageBox.Show("DONE!!!");
+
+            TimeSpan span = (DateTime.Now - od.ProcessStartTime);
+            AppendTextBoxStatus("Execution Complete--" + "\r\n");
+            AppendTextBoxStatus("----------Total Runtime: " + String.Format("{0} minutes, {1} seconds", span.Minutes, span.Seconds) + "\r\n");
+            AppendTextBoxStatus("----------Total Scripts In Queue: " + od.FileTotalCount.ToString() + "    Total Scripts Run: " + od.CurrentRecordCount.ToString() + "    SuccessFully Updated: " + od.FileSuccessfullUpdateCount.ToString() + "    Errors: " + od.FileErrorCount.ToString() + "\r\n");
+
+            //Log
+            WriteToTextLog(GetLogFooter(od.FileTotalCount, od.FileSuccessfullUpdateCount, od.FileErrorCount), false);
+
+            //Write To Excel Log
+            if (od.CreateExcelLog == true)
+            {                
+                WriteToExcelLog();
+            }
+            //This is a file of just the error scripts.  Use incase you want to just execute these in a 2nd run
+            WriteErrorFile();
+
             od.WorkerIsBusy = false;
-            od.CancelButtonEnabled = false;
-            od.RunButtonEnabled = true;
+            od.EnableWhenRunning = false;
+            od.DisableWhenRunning = true;
         }
 
        /*-----------------------------------------------------
@@ -454,23 +488,7 @@ namespace SQLScriptExecute
             dr[3] = date;       //Date
             dr[4] = message;    //Message
             excelDataTable.Rows.Add(dr);//Add to end of the datatable
-        }
-
-
-        /*-----------------------------------------------------
-        Write to Log
-        -----------------------------------------------------*/
-        private void Log(string logMessage, TextWriter w, bool includeDate)
-        {
-            if (includeDate == true)
-            {
-                w.WriteLine("{0} {1} {2}", DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString(), logMessage);
-            }
-            else
-            {
-                w.WriteLine(logMessage);
-            }
-        }
+        }        
 
         /*-----------------------------------------------------
         Get Log Header
@@ -510,27 +528,13 @@ namespace SQLScriptExecute
         -----------------------------------------------------*/
         public void AppendTextBoxStatus(string text)
         {
-            od.TextBoxStatusLog += text;
+            od.RealTimeStatus += text;
         }
 
         public void AppendTextBoxStatusWithTimeStamp(string text)
         {
-            od.TextBoxStatusLog += DateTime.Now.ToString("yyyyMMddHHmmss") + "--" + text;            
-        }
-
-
-        /*-----------------------------------------------------
-        Create Excel Log
-        -----------------------------------------------------*/
-        private void CreateExcelLog()
-        {
-            // use ClosedXML to write to excel
-            using (var book = new XLWorkbook(XLEventTracking.Disabled))
-            {
-                book.Worksheets.Add(excelDataTable, "ExcelLog");
-                book.SaveAs(od.ExcelFileName);
-            }
-        }
+            od.RealTimeStatus += DateTime.Now.ToString("yyyyMMddHHmmss") + "--" + text;            
+        }        
 
         /*-----------------------------------------------------
         Get Log Footer
@@ -546,20 +550,53 @@ namespace SQLScriptExecute
         /*-----------------------------------------------------
         Error File Header
         -----------------------------------------------------*/
-        private void WriteErrorFile(DateTime startTime, int totalFiles,  int errorCount)
+        private void WriteErrorFile()
         {
             //Only write file if there are Errors
-            if (errorCount > 0 )
+            if (od.FileErrorCount > 0 )
             {
-                using (TextWriter tw = new StreamWriter(od.ErrorFileName))
+                //using (TextWriter tw = new StreamWriter(od.ErrorFileName))
+                using (StreamWriter w = new StreamWriter(od.ErrorFileName))
                 {
                     //Write Header to error file
-                    tw.WriteLine("HEADER----StartTime:" + startTime.ToString("yyyyMMddHHmmss") + ", TotalFilesRun: " + totalFiles.ToString() + ", ErrorCount: " + errorCount.ToString());
+                    w.WriteLine("HEADER----StartTime:" + od.ProcessStartTime.ToString("yyyyMMddHHmmss") + ", TotalFilesRun: " + od.FileTotalCount.ToString() + ", ErrorCount: " + od.FileErrorCount.ToString());
 
-                    foreach (String s in od.ErrorListFileNames)
-                        tw.WriteLine(s);
+                    foreach (String s in od.ErrorFileNameList)
+                        w.WriteLine(s);
                 }
             }            
+        }
+
+        /*-----------------------------------------------------
+        Write to Log
+        -----------------------------------------------------*/
+        private void WriteToTextLog(string logMessage, bool includeDate)
+        {
+            //using (StreamWriter w = File.CreateText(od.LogPath + @"\" + od.LogFileName + @".log"))
+            using (StreamWriter w = new StreamWriter(od.LogPath + @"\" + od.LogFileName + @".log", true))
+            {
+                if (includeDate == true)
+                {
+                    w.WriteLine("{0} {1} {2}", DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString(), logMessage);
+                }
+                else
+                {
+                    w.WriteLine(logMessage);
+                }
+            }
+        }
+
+        /*-----------------------------------------------------
+        Write To Excel Log
+        -----------------------------------------------------*/
+        private void WriteToExcelLog()
+        {
+            // use ClosedXML to write to excel
+            using (var book = new XLWorkbook(XLEventTracking.Disabled))
+            {
+                book.Worksheets.Add(excelDataTable, "ExcelLog");
+                book.SaveAs(od.ExcelFileName);
+            }
         }
 
     }
