@@ -74,7 +74,7 @@ namespace SQLScriptExecute
         private bool _useDefaultLogPath = Properties.Settings.Default.UseDefaultLogPath;
         private string _logPath = Properties.Settings.Default.LogPath;
         private string _scriptsToExecutePath = Properties.Settings.Default.ScriptsToExecutePath;
-        private string _progressPercentText = "0%";
+        private string _progressPercentText = "0";
         private int _progressBarValue = 0;
         private string _realTimeStatus { get; set; } = "";
         private bool _processErrorFiles = Properties.Settings.Default.ProcessErrorFiles;
